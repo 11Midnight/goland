@@ -57,15 +57,15 @@ func main() {
 	if  err != nil {
 		fmt.Println(fmt.Errorf("Error reading YAML file: %s\n", err))
 		return
-	} else {
-		fmt.Printf("Output: %s\n", b)
-		fileNameJson:=strings.Replace(fileNameYaml,".yaml",".json", -1)
-		jsonFile, err := os.Create("./"+fileNameJson)
-		if err != nil {
-			fmt.Println(fmt.Errorf("Error create JSON  file: %s\n", err))
-		}
-		jsonFile.Write(b)
-		defer jsonFile.Close()
-		fmt.Println("JSON data written to ", jsonFile.Name())
 	}
+	fmt.Printf("Output: %s\n", b)
+	fileNameJson:=strings.Replace(fileNameYaml,".yaml",".json", -1)
+	jsonFile, err := os.Create("./"+fileNameJson)
+	if err != nil {
+		fmt.Println(fmt.Errorf("Error create JSON  file: %s\n", err))
+	}
+	jsonFile.Write(b)
+	defer jsonFile.Close()
+	fmt.Println("JSON data written to ", jsonFile.Name())
+
 }
