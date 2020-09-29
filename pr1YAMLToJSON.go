@@ -63,6 +63,7 @@ func main() {
 	jsonFile, err := os.Create("./"+fileNameJson)
 	if err != nil {
 		fmt.Println(fmt.Errorf("Error create JSON  file: %s\n", err))
+		return
 	}
 	jsonFile.Write(b)
 	defer jsonFile.Close()
