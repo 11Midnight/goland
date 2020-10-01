@@ -16,9 +16,11 @@ func convertYaml(i interface{}) interface{} {
 		for k, v := range x {
 			m2[k.(string)] = convertYaml(v)
 			for key,value:= range m2{
-				if strings.Contains(fmt.Sprintf("%s",value),"http:"){
-					result := strings.Replace(fmt.Sprintf("%s",value), "http:", "https:", -1)
-					m2[key]=fmt.Sprintf("%s",result)
+				if key!= "endpoint" {
+					if strings.Contains(fmt.Sprintf("%s", value), "http:") &&!strings.Contains(fmt.Sprintf("%s", value), "endpoint"){
+							result := strings.Replace(fmt.Sprintf("%s", value), "http:", "https:", -1)
+							m2[key] = fmt.Sprintf("%s", result)
+					}
 				}
 				if key =="domain"{
 					m2["endpoint"]="https://"+fmt.Sprintf("%s",value)
@@ -36,7 +38,6 @@ func convertYaml(i interface{}) interface{} {
 	}
 	return i
 }
-
 func main() {
 	scanner:=bufio.NewScanner(os.Stdin)
 	scanner.Scan()
@@ -49,13 +50,13 @@ func main() {
 	var body interface{}
 	err = yaml.Unmarshal([]byte(yamlD), &body)
 	if  err != nil {
-		fmt.Println(fmt.Errorf("Error reading YAML file: %s\n", err))
+		fmt.Println(fmt.Errorf("Error unmarshal YAML file: %s\n", err))
 		return
 	}
 	body = convertYaml(body)
 	b, err := json.Marshal(body)
 	if  err != nil {
-		fmt.Println(fmt.Errorf("Error reading YAML file: %s\n", err))
+		fmt.Println(fmt.Errorf("Error marshal to JSON file: %s\n", err))
 		return
 	}
 	fmt.Printf("Output: %s\n", b)
@@ -68,5 +69,4 @@ func main() {
 	jsonFile.Write(b)
 	defer jsonFile.Close()
 	fmt.Println("JSON data written to ", jsonFile.Name())
-
 }
