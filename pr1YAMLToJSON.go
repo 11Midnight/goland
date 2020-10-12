@@ -18,17 +18,19 @@ func convertYaml(i interface{}) (interface{}, error){
 		for k, v := range x {
 			m2[k.(string)],err = convertYaml(v)
 			for key,value:= range m2 {
-				switch key{
-				case "endpoint":{}
-				case "domain":
-						m2["endpoint"] = fmt.Sprintf("https://%s", value)
-				case "ip":
-						m2["endpoint"] = fmt.Sprintf("http://%s", value)
-				default:
-						if strings.Contains(fmt.Sprintf("%s", value), "http:") && !strings.Contains(fmt.Sprintf("%s", value), "endpoint") {
-							m2[key] = strings.ReplaceAll(fmt.Sprintf("%s", value), "http:", "https:")
-						}
+				switch v := value.(type){
+				case string:
+					switch key{
+					case "endpoint":{}
+					case "domain":
+						m2["endpoint"] = fmt.Sprintf("https://%s", v)
+					case "ip":
+						m2["endpoint"] = fmt.Sprintf("http://%s", v)
+					default:
+						m2[key] = strings.ReplaceAll(v, "http:", "https:")
+					}
 				}
+
 			}
 		}
 		return m2,err
